@@ -17,34 +17,61 @@ public class CSCI3170Proj {
 
     static void master(Scanner inp, String host, String dbusr, String dbPass)
     {
-        switch(inp.nextInt())
+        boolean run = true;
+        while(run)
         {
-            case 1:
-                admin(inp, host, dbusr, dbPass);
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-            default:
-        }
-    }
+            System.out.println("\n");
+            System.out.println("Welcome to Car Rental System");
+            System.out.println("Press : ");
+            System.out.println("1 for Administrator Access");
+            System.out.println("2 for User Access");
+            System.out.println("3 for Manager Access");
+            System.out.println("4 to exit");
 
+            System.out.println();
+            System.out.print("Enter your choice : ");
+
+            switch(inp.nextInt())
+            {
+                case 1: admin(inp, host, dbusr, dbPass);
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    run = false;
+                    break;
+                default:
+                    System.out.println("Invalid Input!!");
+            }
+
+        }
+
+        return;
+    }
 
     static void admin(Scanner inp, String host, String dbusr, String dbPass)
     {
-        System.out.println("\n");
-        System.out.println("Operations for Administrator menu");
-        System.out.println("1. Create all tables\n" +
-                "2. Delete all\n" +
-                "3. Load from datafile\n" +
-                "4. Show number of records in each table\n" +
-                "5. Return to the main menu");
-        System.out.println();
-        while(true)
+        /**
+         * create all tables
+         * delete all tables
+         * load form datafile
+         * Show number of records in each table
+         * Return to the main menu
+         * **/
+
+        boolean run = true;
+        while(run)
         {
+            System.out.println("\n");
+            System.out.println("Operations for Administrator menu");
+            System.out.println("1. Create all tables\n" +
+                    "2. Delete all\n" +
+                    "3. Load from datafile\n" +
+                    "4. Show number of records in each table\n" +
+                    "5. Return to the main menu");
+            System.out.println();
             System.out.println("Enter your choice : ");
             switch (inp.nextInt())
             {
@@ -58,12 +85,13 @@ public class CSCI3170Proj {
                     numOfRecinTab(host, dbusr, dbPass);
                     break;
                 case 5:
-                    return;
-
+                    run = false;
+                    break;
                 default:
                     System.out.println("Invalid Input!");
             }
         }
+        return;
     }
 
     static void createTables(String host, String dbusr, String dbPass)
@@ -122,6 +150,7 @@ public class CSCI3170Proj {
         {
             e.printStackTrace();
         }
+        return;
     }
 
     static void deleteTables(String host, String dbusr, String dbPass)
@@ -141,10 +170,12 @@ public class CSCI3170Proj {
         {
             e.printStackTrace();
         }
+        return;
     }
     void LoadData()
     {
         System.out.println("WIP!");
+        return;
     }
 
 
@@ -171,23 +202,10 @@ public class CSCI3170Proj {
         {
             e.printStackTrace();
         }
+        return;
     }
-
 }
 
-//    static void admin()
-//    {
-//
-//        /**
-//         * create all tables
-//         * delete all tables
-//         * load form datafile
-//         * Show number of records in each table
-//         * Return to the main menu
-//         * **/
-//
-//
-//    }
 
 
 //            Connection con = DriverManager.getConnection(host, dbusr, dbPass);
