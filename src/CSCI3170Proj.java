@@ -171,21 +171,8 @@ public class CSCI3170Proj {
     }
     void loadData(String filePath, String l)
     {
-        BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader(filePath));
-            String line = reader.readLine();
-            while (line != null) {
-                FileModelInterface model = (FileModelInterface) type.newInstance();
-                model.parseFromLine(line);
-                model.saveToDatabase(conn);
-                line = reader.readLine();
-            }
-        } catch (Exception e) {
-            System.out.println("[Error] " + e);
-        }
-//        System.out.println("WIP!");
-        return;
+
+        System.out.println("WIP!");
     }
 
     static void numOfRecinTab(String host, String dbusr, String dbPass)
