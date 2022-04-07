@@ -1,3 +1,5 @@
+
+import java.io.*;
 import java.sql.*;
 import java.lang.*;
 import java.util.Scanner;
@@ -38,6 +40,7 @@ public class CSCI3170Proj {
                 case 2:
                     break;
                 case 3:
+                        manager(inp, host, dbusr,dbPass);
                     break;
                 case 4:
                     run = false;
@@ -45,11 +48,11 @@ public class CSCI3170Proj {
                 default:
                     System.out.println("Invalid Input!!");
             }
-
         }
-
         return;
     }
+
+
 
     static void admin(Scanner inp, String host, String dbusr, String dbPass)
     {
@@ -80,6 +83,11 @@ public class CSCI3170Proj {
                 case 2: deleteTables(host, dbusr, dbPass);
                     break;
                 case 3:
+                {
+                    System.out.print("Type in the Source Data Folder Path : ");
+                    String path = inp.nextLine();
+//                    loadData(inp, path, host, dbusr, dbPass);
+                }
                     break;
                 case 4:
                     numOfRecinTab(host, dbusr, dbPass);
@@ -96,93 +104,93 @@ public class CSCI3170Proj {
 
     static void createTables(String host, String dbusr, String dbPass)
     {
-        try{
-            Connection con = DriverManager.getConnection(host, dbusr, dbPass);
-            Statement st = con.createStatement();
+        String[] command = new String[]{
+                "CREATE TABLE `user_category`(" +
+                        "`ucid` int(1) UNSIGNED NOT NULL PRIMARY KEY," + //ucid PRIMARY KEY
+                        "`max` int(1) UNSIGNED NOT NULL," +
+                        "`period` int(2) UNSIGNED NOT NULL" +
+                        ");",
 
-            int resultSet;
-            // user_category
-            resultSet = st.executeUpdate("CREATE TABLE `user_category`(" +
-                    "`user_cat` int(1) UNSIGNED NOT NULL," +
-                    "`max_cars` int(1) UNSIGNED NOT NULL," +
-                    "`loan_period` int(2) UNSIGNED NOT NULL" +
-                    ");");
+                "CREATE TABLE `users`(" +
+                        "`uid` varchar(12) NOT NULL PRIMARY KEY," + // uid PRIMARY KEY
+                        "`name` varchar(25) NOT NULL," +
+                        "`age` int(2) UNSIGNED NOT NULL," +
+                        "`occupation` VARCHAR(20)," +
+                        "`ucid` int(1) UNSIGNED NOT NULL" +
+                        ");",
 
+                "CREATE TABLE `car_category`(" +
+                        "`ccid` int(1) UNSIGNED NOT NULL PRIMARY KEY," + // ccid PRIMARY KEY
+                        "`ccname` VARCHAR(20) NOT NULL" +
+                        ");",
 
-            // users
-            resultSet = st.executeUpdate("CREATE TABLE `users`(" +
-                    "`user_id` int(1) UNSIGNED NOT NULL," +
-                    "`name` int(1) UNSIGNED NOT NULL," +
-                    "`age` int(2) UNSIGNED NOT NULL," +
-                    "`occupation` VARCHAR(20)," +
-                    "`user_cat` int(1) UNSIGNED NOT NULL" +
-                    ");");
+                "CREATE TABLE `cars`(" +
+                        "`callnum` VARCHAR(8) NOT NULL," +
+//                    "`num_of_copies` int(1) UNSIGNED NOT NULL," +
+                        "`name` VARCHAR(10) NOT NULL," +
+//                    "`company` VARCHAR(25)  NOT NULL," +
+                        "`manufacture` date NOT NULL," +
+                        "`time_rent` int(2) UNSIGNED NOT NULL," +
+                        "`ccid` int(1) UNSIGNED NOT NULL PRIMARY KEY" + // ccid PRIMARY KEY
+                        ");",
 
+                "CREATE TABLE `copy`(" +
+                        "`callnum` VARCHAR(8) NOT NULL PRIMARY KEY," + // callnum PRIMARY KEY
+                        "`copynum` int(1) UNSIGNED NOT NULL" +
+                        ");",
+                "CREATE TABLE `rent`(" +
+                        "`uid` VARCHAR(10) NOT NULL PRIMARY KEY," +
+                        "`callnum` VARCHAR(8) NOT NULL," +
+                        "`copynum` int(1) NOT NULL," +
+                        "`checkout` date NOT NULL," +
+                        "`return` date NOT NULL" +
+                        ");",
 
-            //car_category
-            resultSet = st.executeUpdate("CREATE TABLE `car_category`(" +
-                    "`car_cat_id` int(1) UNSIGNED NOT NULL," +
-                    "`car_cat` VARCHAR(20) NOT NULL" +
-                    ");");
+                "CREATE TABLE `produce`(" +
+                        "`cname` VARCHAR(10) NOT NULL," +
+                        "`callnum` VARCHAR(8) NOT NULL PRIMARY KEY" + // callnum PRIMARY KEY
+                        ");"
+        };
 
-            //cars
-            resultSet = st.executeUpdate("CREATE TABLE `cars`(" +
-                    "`call_num` VARCHAR(8) NOT NULL," +
-                    "`num_of_copies` int(1) UNSIGNED NOT NULL," +
-                    "`car_name` VARCHAR(10) NOT NULL," +
-                    "`company` VARCHAR(25)  NOT NULL," +
-                    "`dom` date NOT NULL," +
-                    "`times_rented` int(2) UNSIGNED NOT NULL," +
-                    "`car_cat_id` int(1) UNSIGNED NOT NULL" +
-                    ");");
-
-
-            //rent
-            resultSet = st.executeUpdate("CREATE TABLE `rent`(" +
-                    "`call_num` VARCHAR(8) NOT NULL," +
-                    "`copy_num` int(1) UNSIGNED NOT NULL," +
-                    "`user_id` VARCHAR(10) NOT NULL," +
-                    "`rent_date` date NOT NULL," +
-                    "`return_date` date NOT NULL" +
-                    ");");
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        return;
+        exUpdate(command, host, dbusr, dbPass);
+           return;
     }
 
     static void deleteTables(String host, String dbusr, String dbPass)
     {
-        try{
-            Connection con = DriverManager.getConnection(host, dbusr, dbPass);
-            Statement st = con.createStatement();
-            String[] tab =  {"user_category", "users", "car_category", "cars", "rent"};
-            String query = "DROP TABLE IF EXISTS ";
-            for(String i : tab)
-            {
-                String s = query+i;
-                int resultSet = st.executeUpdate(s);
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        return;
-    }
-    void LoadData()
-    {
-        System.out.println("WIP!");
-        return;
-    }
+        String[] tab =  {"user_category", "users", "car_category", "cars", "rent", "copy", "produce"};
+        String query = "DROP TABLE IF EXISTS ";
 
+        String[] command = new String[tab.length];
+        for(int i = 0; i < tab.length; i++)
+        {
+            command[i] = query+tab[i];
+        }
+        exUpdate(command, host,dbusr,dbPass);
+        return;
+    }
+    void loadData(String filePath, String l)
+    {
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader(filePath));
+            String line = reader.readLine();
+            while (line != null) {
+                FileModelInterface model = (FileModelInterface) type.newInstance();
+                model.parseFromLine(line);
+                model.saveToDatabase(conn);
+                line = reader.readLine();
+            }
+        } catch (Exception e) {
+            System.out.println("[Error] " + e);
+        }
+//        System.out.println("WIP!");
+        return;
+    }
 
     static void numOfRecinTab(String host, String dbusr, String dbPass)
     {
         try{
-
             Connection con = DriverManager.getConnection(host, dbusr, dbPass);
             Statement st = con.createStatement();
 
@@ -204,7 +212,71 @@ public class CSCI3170Proj {
         }
         return;
     }
+
+    static void manager(Scanner inp, String host, String dbusr, String dbPass) {
+        boolean run = true;
+        while(run)
+        {
+            System.out.println("\n");
+            System.out.println("Operations for Manager menu");
+            System.out.println("1. Car Renting\n" +
+                    "2. Car Returning\n" +
+                    "3. List all un-returned car copies which are checked-out within a period.\n"+
+                    "4. Return to the main menu");
+            System.out.println();
+            System.out.println("Enter your choice : ");
+            switch (inp.nextInt())
+            {
+                case 1: carRenting(inp, host, dbusr, dbPass);
+                    break;
+                case 2:
+//                    carReturning(host, dbusr, dbPass);
+                    break;
+                case 3:
+//                    listallunreturned(host, dbusr, dbPass);
+                    break;
+                case 5:
+                    run = false;
+                    break;
+                default:
+                    System.out.println("Invalid Input!");
+            }
+        }
+        return;
+    }
+
+
+    static void carRenting(Scanner inp, String host, String dbusr, String dbPass)
+    {
+        System.out.println("Enter the User ID : ");
+        int usrid = inp.nextInt();
+        System.out.println("Enter the Call Number : ");
+        int callno = inp.nextInt();
+        System.out.println("Enter the Copy Number : ");
+        int copynum = inp.nextInt();
+
+
+    }
+
+    static void exUpdate(String[] commands, String host, String dbusr, String dbPass) {
+        try {
+            Connection con = DriverManager.getConnection(host, dbusr, dbPass);
+            Statement st = con.createStatement();
+
+            int resultSet;
+            for(String c : commands)
+            {
+                resultSet = st.executeUpdate(c);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return;
+    }
 }
+
+
 
 
 
