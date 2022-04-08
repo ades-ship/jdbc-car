@@ -12,7 +12,7 @@ public class CSCI3170Proj {
         String dbUsername = "root";
         String dbPassword = "vivekkohli935@gmail.com";
 
-//        createTable(host, dbUsername, dbPassword);
+//        to createTable(host, dbUsername, dbPassword);
         master(inp, host, dbUsername, dbPassword);
 
     }
